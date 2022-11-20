@@ -15,15 +15,17 @@
 #
 #     def can_add(self, v):
 #         if v <= self.capacity:
-#             return False
-#         else:
 #             return True
+#         else:
+#             return False
 #
 #     def add(self, v):
 #         if self.can_add(v) is True:
-#             return self.capacity - v
+#             print(f"Ты добавил {v} монет")
+#             print("---------")
+#             self.capacity -= v
 #         else:
-#             print("Уже не влазит :(")
+#             print(f"{v} монет не влезет")
 #
 #
 # my_box = MoneyBox(100)
@@ -31,6 +33,9 @@
 # my_box.info()
 # my_box.add(5)
 # my_box.info()
+# my_box.add(90)
+# my_box.info()
+# my_box.add(7)
 
 
 """
@@ -97,18 +102,49 @@
 # class Airplane(Trucking):
 #     SPEED = 300
 #
-#     def __init__(self, target, distance):
+#     def __init__(self, target: str, distance: float):
 #         Trucking.__init__(self, target, distance)
 #
-#     def time(self):
-#         return self.distance / self.SPEED
+#     def travel_time(self):
+#         return self.distance / Airplane.SPEED
 #
 #     def info(self):
-#         print(f"До {self.target} доберемся на {self.__class__.__name__} за {self.time}")
+#         print(f"До {self.target} доберемся на {self.__class__.__name__} за {round(self.travel_time(), 2)} часов")
 #
 #
+# class Train(Trucking):
+#     SPEED = 90
 #
-# Airplane.info("Санкт-Петербург", 980)
+#     def __init__(self, target: str, distance: float):
+#         Trucking.__init__(self, target, distance)
+#
+#     def travel_time(self):
+#         return self.distance / Train.SPEED
+#
+#     def info(self):
+#         print(f"До {self.target} доберемся на {self.__class__.__name__} за {round(self.travel_time(), 2)} часов")
+#
+#
+# class Automobile(Trucking):
+#     SPEED = 120
+#
+#     def __init__(self, target: str, distance: float):
+#         Trucking.__init__(self, target, distance)
+#
+#     def travel_time(self):
+#         return self.distance / Automobile.SPEED
+#
+#     def info(self):
+#         print(f"До {self.target} доберемся на {self.__class__.__name__} за {round(self.travel_time(), 2)} часов")
+#
+#
+# way1 = Airplane("Мурманск", 1900)
+# way2 = Train("Санкт-Петербург", 980)
+# way3 = Automobile("Варшава", 780)
+#
+# way1.info()
+# way2.info()
+# way3.info()
 
 
 """
@@ -119,25 +155,44 @@
 
 
 class Shop:
-    def __init__(self, good):
-        self.good = good
+    def __init__(self, goods_in_shop):
+        self.goods_in_shop = list(goods_in_shop)
+
+    def info(self):
+        print(self.goods_in_shop)
 
 
-class Stock(Shop):
-    def __init__(self, good):
-        Shop.__init__(self, good)
+class Merchandiser(Shop):
+    GOODS_IN_STOCK = ["monitor", "kettle", "iron", "TV", "mouse"]
 
-    def check_goods(self, good):
-        return good in self.goods
+    def __init__(self, goods_in_shop):
+        self.goods_in_shop = list(goods_in_shop)
+
+    def check_good_shop(self, good):
+        return True if good in self.goods_in_shop else False
+
+    def check_goods_stock(self, good):
+        return True if good in Merchandiser.GOODS_IN_STOCK else False
 
     def add_good(self, good):
-        if self.check_goods(good):
-            print(f"The costs was changed. {good} is {costs} now")
-        self.goods[good] = costs
+         print(f"Товар {good} уже в наличии в магазине") if self.check_good_shop(good) else self.goods_in_shop.append(good)
 
 
-class Product(Shop):
-    def __init__(self, good):
-        Shop.__init__(self, good)
+class Buyer:
+    def find(self, good):
+        if Merchandiser.check_good_shop(good):
+            print("Товар в наличии в магазине, проходите оплачивайте на кассу")
+        elif Merchandiser.check_goods_stock(good):
+            print("Товар в наличии на складе") if True else print("Товара нет ни в магазине, ни на складе")
 
 
+shop = Merchandiser([])
+
+shop.add_good("TV")
+shop.add_good("keyboard")
+shop.add_good("mouse")
+shop.add_good("SD-card")
+
+
+Max = Buyer()
+Max.find("TV")
