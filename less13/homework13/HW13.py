@@ -15,6 +15,11 @@
 
 
 class Agency:
+    def __init__(self):
+        self.Air = Air()
+        self.Railway = Railway()
+        self.Automobile = Automobile()
+
     BIG_CITIES = [  # большие города
         "Minsk",
         "Warsaw",
@@ -31,81 +36,125 @@ class Agency:
         "Kherson"
     ]
 
+    def choose_transport(self, city1, city2):
+        if city1 in self.BIG_CITIES and city2 in self.BIG_CITIES:
+            print(f"Air. Цена за 1 кг товара составит {self.Air.PRICE_PER_KILO} $.")
+            print(f"Railway. Цена за 1 кг товара составит {self.Railway.PRICE_PER_KILO} $.")
+            print(f"Automobile. Цена за 1 кг товара составит {self.Automobile.PRICE_PER_KILO} $.")
+
+        elif city1 in Agency.MEDIUM_CITIES and city2 in Agency.MEDIUM_CITIES:
+            print(f"Railway. Цена за 1 кг товара составит {self.Railway.PRICE_PER_KILO} $.")
+            print(f"Air. Цена за 1 кг товара составит {self.Air.PRICE_PER_KILO} $.")
+
+        else:
+            print(f"Automobile. Цена за 1 кг товара составит {self.Automobile.PRICE_PER_KILO} $.")
+
+        print("-------------------")
+        transport = input("Каким путем вы хотели бы отправить Ваш товар?: ")
+
+        if transport == "Air":
+            return self.Air.info(city1, city2)
+        if transport == "Railway":
+            return self.Railway.info(city1, city2)
+        if transport == "Automobile":
+            return self.Automobile.info(city1, city2)
+
+
+class Transport:
+    def time_of_delivery(self, city1, city2):
+        return self.distance(city1, city2) / self.SPEED
+
     def weight(self):
-        return input("Введите вес товара в килограммах: ")
+        return int(input("Введите вес товара в килограммах: "))
 
     def price(self, weight, distance):
-        return weight / distance  # цена за единицу веса на единицу пути
-
-
-class Air(Agency):
-    SPEED = 300  # средняя скорость движения самолета
-    PRICE_PER_KILO = 27.35  # стоимость за единицу веса
-
-    def distance(self, city1, city2):
-        if city1 or city2 == "Минск" and city1 or city2 == "Warsaw":
-            return 476
-        if city1 or city2 == "Минск" and city1 or city2 == "Kiev":
-            return 417
-        if city1 or city2 == "Warsaw" and city1 or city2 == "Kiev":
-            return 690
+        return weight * self.PRICE_PER_KILO * distance
 
     def info(self, city1, city2):
-        print(f"Расстояние составит {self.distance(city1, city2)} км, стоимость пересылки составит {self.price()} $")
+        print(f"Расстояние составит {self.distance(city1, city2)} км,"
+              f"стоимость пересылки составит {self.price(self.weight(), self.distance(city1, city2))} $, "
+              f"время в пути составит {self.time_of_delivery(city1, city2)} часа")
 
 
-class Railway(Agency):
+class Air(Transport):
+    SPEED = 300  # средняя скорость движения самолета
+    PRICE_PER_KILO = 27.35  # стоимость за единицу веса на 1 км пути
+
+    def distance(self, city1, city2):
+        if city1 == "Minsk":
+            if city2 == "Warsaw":
+                return 476
+            if city2 == "Kiev":
+                return 417
+        if city1 == "Warsaw":
+            if city2 == "Minsk":
+                return 476
+            if city2 == "Kiev":
+                return 690
+        if city1 == "Kiev":
+            if city2 == "Warsaw":
+                return 690
+            if city2 == "Minsk":
+                return 417
+
+
+class Railway(Transport):
     SPEED = 80  # средняя скорость движения поезда
-    PRICE_PER_KILO = 12.44  # стоимость за единицу веса
+    PRICE_PER_KILO = 12.44  # стоимость за единицу веса на 1 км пути
 
-    def distance_railway(self, city1, city2):
-        if city1 or city2 == "Минск" and city1 or city2 == "Warsaw":
-            return 561
-        if city1 or city2 == "Минск" and city1 or city2 == "Kiev":
-            return 476
-        if city1 or city2 == "Warsaw" and city1 or city2 == "Kiev":
-            return 773
+    def distance(self, city1, city2):
+        if city1 == "Minsk":
+            if city2 == "Warsaw":
+                return 561
+            if city2 == "Kiev":
+                return 476
+        if city1 == "Warsaw":
+            if city2 == "Minsk":
+                return 561
+            if city2 == "Kiev":
+                return 773
+        if city1 == "Kiev":
+            if city2 == "Warsaw":
+                return 773
+            if city2 == "Minsk":
+                return 476
 
 
-class Automobile(Agency):  # средняя скорость движения автомобиля
-    SPEED = 100
-    PRICE_PER_KILO = 8.28  # стоимость за единицу веса
+class Automobile(Transport):
+    SPEED = 100  # средняя скорость движения автомобиля
+    PRICE_PER_KILO = 8.28  # стоимость за единицу веса на 1 км пути
 
-    def distance_automobile(self, city1, city2):
-        if city1 or city2 == "Минск" and city1 or city2 == "Warsaw":
-            return 546
-        if city1 or city2 == "Минск" and city1 or city2 == "Kiev":
-            return 525
-        if city1 or city2 == "Warsaw" and city1 or city2 == "Kiev":
-            return 780
+    def distance(self, city1, city2):
+        if city1 == "Minsk":
+            if city2 == "Warsaw":
+                return 546
+            if city2 == "Kiev":
+                return 525
+        if city1 == "Warsaw":
+            if city2 == "Minsk":
+                return 546
+            if city2 == "Kiev":
+                return 780
+        if city1 == "Kiev":
+            if city2 == "Warsaw":
+                return 780
+            if city2 == "Minsk":
+                return 525
 
 
 def greetings():
     print("Добрый день! Приветствуем Вас с нашей компании!")
     name = input("Подскажите, пожалуйста, как к Вам можно обращаться? ")
     print(f"Рады знакомству, {name}! Компания DPD занимается грузоперевозками и имеет 9 филиалов в 3-х странах.")
-
+    print("-------------------")
     a = input("Укажите откуда хотите отправлять товар: ")
     b = input("Укажите куда хотите отправлять товар: ")
     print("-------------------")
     print(f"Отправка товара из {a} в {b} возможна следующими путями:")
 
-    if a in Agency.BIG_CITIES and b in Agency.BIG_CITIES:
-        print(f"Air. Цена за 1 кг товара составит {Air.PRICE_PER_KILO} $.")
-        print(f"Railway. Цена за 1 кг товара составит {Railway.PRICE_PER_KILO} $.")
-        print(f"Automobile. Цена за 1 кг товара составит {Automobile.PRICE_PER_KILO} $.")
+    DPD = Agency()
+    DPD.choose_transport(a, b)
 
-    elif a in Agency.MEDIUM_CITIES and b in Agency.MEDIUM_CITIES:
-        print(f"Railway. Цена за 1 кг товара составит {Railway.PRICE_PER_KILO} $.")
-        print(f"Air. Цена за 1 кг товара составит {Air.PRICE_PER_KILO} $.")
-
-    elif a in Agency.BIG_CITIES or a in Agency.MEDIUM_CITIES or a in Agency.SMALL_CITIES and b in Agency.BIG_CITIES or b in Agency.MEDIUM_CITIES or b in Agency.SMALL_CITIES:
-        print(f"Automobile. Цена за 1 кг товара составит {Automobile.PRICE_PER_KILO} $.")
-
-    transport = input("Каким путем вы хотели бы отправить Ваш товар?: ")
-    if transport == "Air":
-        DPD_agency_air = Air()
-        return DPD_agency_air.info(a, b)
 
 greetings()
 
