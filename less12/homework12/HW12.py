@@ -166,7 +166,7 @@ class Merchandiser(Shop):
     GOODS_IN_STOCK = ["monitor", "kettle", "iron", "TV", "mouse"]
 
     def __init__(self, goods_in_shop):
-        self.goods_in_shop = list(goods_in_shop)
+        super().__init__(self, goods_in_shop)
 
     def check_good_shop(self, good):
         return True if good in self.goods_in_shop else False
@@ -179,6 +179,9 @@ class Merchandiser(Shop):
 
 
 class Buyer:
+    def __init__(self):
+        pass
+
     def find(self, good):
         if Merchandiser.check_good_shop(good):
             print("Товар в наличии в магазине, проходите оплачивайте на кассу")
@@ -196,3 +199,5 @@ shop.add_good("SD-card")
 
 Max = Buyer()
 Max.find("TV")
+
+
