@@ -36,7 +36,25 @@ class Agency:
         "Kherson"
     ]
 
-    def choose_transport(self, city1, city2):
+    CITIES = {
+        "Minsk": [["Warsaw", 476], ["Kiev", 417]],
+        "Warsaw": [["Minsk", 476], ["Kiev", 690]],
+        "Kiev": [["Minsk", 417], ["Warsaw", 690]]
+    }
+
+    def distance(self, city1, city2):
+        for c1 in Agency.CITIES:
+            if c1 == city1:
+                for c2 in Agency.CITIES[c1]:
+                    if c2[0] == city2:
+                        return c2[1]
+
+    def choose_transport(self):
+        city1 = input("Укажите откуда хотите отправлять товар: ")
+        city2 = input("Укажите куда хотите отправлять товар: ")
+        print("-------------------")
+        print(f"Отправка товара из {city1} в {city2} возможна следующими путями:")
+
         if city1 in self.BIG_CITIES and city2 in self.BIG_CITIES:
             print(f"Air. Цена за 1 кг товара составит {self.Air.PRICE_PER_KILO} $.")
             print(f"Railway. Цена за 1 кг товара составит {self.Railway.PRICE_PER_KILO} $.")
@@ -62,7 +80,7 @@ class Agency:
 
 class Transport:
     def time_of_delivery(self, city1, city2):
-        return self.distance(city1, city2) / self.SPEED
+        return Agency.distance(Agency, city1, city2) / self.SPEED
 
     def weight(self):
         return int(input("Введите вес товара в килограммах: "))
@@ -71,8 +89,8 @@ class Transport:
         return weight * self.PRICE_PER_KILO * distance
 
     def info(self, city1, city2):
-        print(f"Расстояние составит {self.distance(city1, city2)} км,"
-              f"стоимость пересылки составит {self.price(self.weight(), self.distance(city1, city2))} $, "
+        print(f"Расстояние составит {Agency.distance(Agency, city1, city2)} км,"
+              f"стоимость пересылки составит {self.price(self.weight(), Agency.distance(Agency, city1, city2))} $, "
               f"время в пути составит {self.time_of_delivery(city1, city2)} часа")
 
 
@@ -80,66 +98,15 @@ class Air(Transport):
     SPEED = 300  # средняя скорость движения самолета
     PRICE_PER_KILO = 27.35  # стоимость за единицу веса на 1 км пути
 
-    def distance(self, city1, city2):
-        if city1 == "Minsk":
-            if city2 == "Warsaw":
-                return 476
-            if city2 == "Kiev":
-                return 417
-        if city1 == "Warsaw":
-            if city2 == "Minsk":
-                return 476
-            if city2 == "Kiev":
-                return 690
-        if city1 == "Kiev":
-            if city2 == "Warsaw":
-                return 690
-            if city2 == "Minsk":
-                return 417
-
 
 class Railway(Transport):
     SPEED = 80  # средняя скорость движения поезда
     PRICE_PER_KILO = 12.44  # стоимость за единицу веса на 1 км пути
 
-    def distance(self, city1, city2):
-        if city1 == "Minsk":
-            if city2 == "Warsaw":
-                return 561
-            if city2 == "Kiev":
-                return 476
-        if city1 == "Warsaw":
-            if city2 == "Minsk":
-                return 561
-            if city2 == "Kiev":
-                return 773
-        if city1 == "Kiev":
-            if city2 == "Warsaw":
-                return 773
-            if city2 == "Minsk":
-                return 476
-
 
 class Automobile(Transport):
     SPEED = 100  # средняя скорость движения автомобиля
     PRICE_PER_KILO = 8.28  # стоимость за единицу веса на 1 км пути
-
-    def distance(self, city1, city2):
-        if city1 == "Minsk":
-            if city2 == "Warsaw":
-                return 546
-            if city2 == "Kiev":
-                return 525
-        if city1 == "Warsaw":
-            if city2 == "Minsk":
-                return 546
-            if city2 == "Kiev":
-                return 780
-        if city1 == "Kiev":
-            if city2 == "Warsaw":
-                return 780
-            if city2 == "Minsk":
-                return 525
 
 
 def greetings():
@@ -147,13 +114,10 @@ def greetings():
     name = input("Подскажите, пожалуйста, как к Вам можно обращаться? ")
     print(f"Рады знакомству, {name}! Компания DPD занимается грузоперевозками и имеет 9 филиалов в 3-х странах.")
     print("-------------------")
-    a = input("Укажите откуда хотите отправлять товар: ")
-    b = input("Укажите куда хотите отправлять товар: ")
-    print("-------------------")
-    print(f"Отправка товара из {a} в {b} возможна следующими путями:")
+
 
     DPD = Agency()
-    DPD.choose_transport(a, b)
+    DPD.choose_transport()
 
 
 greetings()
