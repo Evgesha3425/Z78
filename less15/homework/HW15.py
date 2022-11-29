@@ -28,7 +28,7 @@ import re
 4. Дана строка, выведите все вхождения слов, начинающиеся на гласную букву.
 """
 
-# pattern = r"\b[a,e,i,o,u,y]\w+"
+# pattern = r"\b[aeiouy]\w+"
 # text = "apple pineapple orange mango"
 # print(re.findall(pattern, text))
 
@@ -71,6 +71,7 @@ import re
 Буквой считается символ из группы \w.
 """
 
-pattern = r"[a-z]*\w+[a-z]*"
-text = "swimming book big loook"
-print(re.findall(pattern, text))
+# pattern = r'(\w)\1+'
+# text = "swimming book big loook"
+# print(re.sub(pattern, r'\1', text))
+
