@@ -134,6 +134,6 @@ $ - окончание шаблона
 # some_str = "den.listapad@mail.ru surovcov@gmail.com vasya_123pupkin@yandex.by"
 # print(re.findall(pattern, some_str))
 
-# pattern = r"\w*less\b"
-# some_str = "dasless less lessdasd"
-# print(re.findall(pattern, some_str))
+pattern = r"\w*less\b"
+some_str = "dasless less lessdasd"
+print(re.findall(pattern, some_str))
