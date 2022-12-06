@@ -1,0 +1,66 @@
+    1. Переименовать колонку fee в finance. Добавить колонку city, где проживают актёры в данный момент и внести все изменения в таблицу.
+
+ALTER TABLE actors RENAME COLUMN fee TO finance;
+ALTER TABLE actors ADD city TEXT;
+UPDATE actors SET city = 'Los Angeles' WHERE name = 'Arnold';
+UPDATE actors SET city = 'New York' WHERE name = 'Bruce';
+UPDATE actors SET city = 'London' WHERE name = 'Tom';
+UPDATE actors SET city = 'Los Angeles' WHERE name = 'Angelina';
+UPDATE actors SET city = 'Los Angeles' WHERE name = 'Brad';
+
+    2.  Добавить несколько актёров мужского и женского пола, которые снимались в фильмах, которые мы написали. Добавить ещё несколько известных актёров и фильмов с их участием.
+
+INSERT INTO actors VALUES (15, 'Mila', 'Jovovich', 46, 'The fifth element', 25000000, 1997, 'f', 'Beverly Hills');
+INSERT INTO actors VALUES (16, 'Vin', 'Diesel', 55, 'Fast and furious 1', 60000000, 2001, 'm', 'Los Angeles');
+INSERT INTO actors VALUES (17, 'Sophie', 'Turner', 26, 'Game of Thrones', 9000000, 2011, 'f', 'Los Angeles');
+INSERT INTO actors VALUES (18, 'Kit', 'Harington', 35, 'Game of Thrones', 12000000, 2011, 'm', 'Suffolk');
+INSERT INTO actors VALUES (19, 'Jason', 'Momoa', 43, 'Game of Thrones', 7000000, 2011, 'm', 'Topanga');
+
+    3. Вывести всех актёров которые снимались в период с 1990 по 2000 год. Актёры должны быть выведены только 1 раз.
+
+SELECT DISTINCT name, surname, film FROM actors WHERE "release" BETWEEN 1990 AND 2000;
+
+    4. Вывести все фильмы в которых приняли участие 2 и более актёра из нашей базы данных. Вывод организовать в порядке возрастания фамилий!
+
+SELECT name, surname, film FROM actors
+WHERE film IN (
+	SELECT film FROM actors
+	GROUP BY film
+	HAVING count(film) >= 2
+)
+ORDER BY surname ASC
+
+
+
+    5. Вывести количество актёров мужского пола, которые есть в таблице.
+
+SELECT COUNT(DISTINCT name) AS "Количество" FROM actors
+WHERE sex = "m";
+
+    6. Вывести всех актёров которые приняли участие в 3-х и более фильмах, которые есть а бд.
+
+SELECT name, surname FROM actors
+GROUP BY name
+HAVING COUNT(film) >= 3;
+
+    7. Вывести общую сумму всех гонораров актёров в фильмах снятых в период с 1995 по 2005 год.
+
+SELECT SUM(finance) AS "Сумма гонораров" FROM actors
+WHERE "release" BETWEEN 1995 AND 1997;
+
+    8. Вывести фильмы и имена и фамилии актёров, которым на момент выпуска фильма в прокат было меньше 35 лет.
+
+SELECT name, surname, film FROM actors
+WHERE 2022 - "release" <= 35;
+
+    9. Вывести все фильмы название которых состоит из 2 слов. Использовать регулярные выражения.
+
+SELECT film FROM actors
+WHERE film LIKE '\b\w+\b\s\b\w+\b';
+
+    10. Вывести  фильмы и общие выплаты актёрам. В порядке убывания общей суммы гонораров. Вывести первые 5 фильмов.
+
+SELECT film AS "Название фильма", SUM(finance) AS "Выплаты актерам" FROM actors
+GROUP BY film
+ORDER BY SUM(finance) DESC
+LIMIT 5;
